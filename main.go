@@ -1,15 +1,29 @@
-package main // tells Go compiler that this package (directory) is executable
+package main 
 
-import "fmt" // import "format" package; docs @ https://pkg.go.dev/fmt 
+import (
+    "log"       // for simple logging
+    "net/http"  // for http client and server implementations
+)
 
-// entry point into the executable package
-// shared libraries don't have package main or function main
-func main() {
-    fmt.Println("Hello world!")
+// create handler function
+// writes a byte slice as the response body
+func home(w http.ResponseWriter, r *http.Request) {
+    w.Write([]byte("Hello from Snippetbox"))
 }
 
-// run with `go run <command>`
-// specify the local path, the file name, or the full module path
-// `$ go run snippetbox.latushka.dev`
-// `$ go run main.go`
-// `$ go run .`
+func main() {
+    // create router (initialize new servmux)
+    // register handler function for a route "/"
+    // "/" is a catch-all URL pattern in servemux 
+    // servmux will receive HTTP request and check the URL path
+    // then dispatch to the handler function
+    mux := http.NewServeMux()
+    mux.HandleFunc("/", home)
+
+    // start web server listening on port 4000
+    // uses mux for routing
+    // if server returns an error, log.Fatal will exit server
+    log.Println("starting server on :4000")
+    err := http.ListenAndServe(":4000", mux)
+    log.Fatal(err)
+}
