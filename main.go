@@ -24,6 +24,20 @@ func snippetView (w http.ResponseWriter, r *http.Request) {
     w.Write([]byte("Display a specific snippet"))
 }
 func snippetCreate (w http.ResponseWriter, r *http.Request) {
+    // this handler will eventually create a new snippet in the database
+    // which is a non-idempotent action that changes server state
+    // so subsequent calls with the same input can yield different results
+    // HTTP good practice is to restrict methods on routes
+    // in this case we want to restrict route to act on POST request only
+    // it will send a 405 Method Not Allowed unless the method is POST
+    // return from create snippet so subsequent code is not executed
+    // test with `$ curl -i -X POST http://localhost:4000/snippet/create`
+    if r.Method != "POST" {
+        w.WriteHeader(405)
+        w.Write([]byte("Method Not Allowed"))
+        return
+    }
+
     w.Write([]byte("Create a new snippet"))
 }
 
@@ -46,7 +60,7 @@ func main() {
     // like a wild card "/view/" == "/view/**"
     mux.HandleFunc("/", home)
     mux.HandleFunc("/snippet/view", snippetView)
-    mux.HandleFunc("/snippet/crete", snippetCreate)
+    mux.HandleFunc("/snippet/create", snippetCreate)
 
     // start web server listening on port 4000 and routing with 'mux'
     // if server returns an error, log.Fatal will exit server
