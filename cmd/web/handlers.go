@@ -30,7 +30,7 @@ func home(w http.ResponseWriter, r *http.Request) {
     }
 
     // write template set content as the response body 'w'
-    err = ts.Execute(w, nil)
+    err = ts.ExecuteTemplate(w, "base", nil)
     if err != nil {
         log.Println(err.Error())
         http.Error(w, "Internal Server Error", 500)
