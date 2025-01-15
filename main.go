@@ -23,6 +23,11 @@ func main() {
     mux := http.NewServeMux()
     // register handler functions 
     // 'mux' will dispatch to the handler function of a URL path
+    // fixed URL paths don't end with trailing slash "/view"
+    // require exact match to call corresponding handler
+    // subtree URL paths do end with trailing slach "/view/"
+    // call handlers when start of request path matches
+    // like a wild card "/view/" == "/view/**"
     mux.HandleFunc("/", home)
     mux.HandleFunc("/snippet/view", snippetView)
     mux.HandleFunc("/snippet/crete", snippetCreate)
