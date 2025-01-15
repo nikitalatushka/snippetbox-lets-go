@@ -8,8 +8,14 @@ import (
 func main() {
     // Initialize router
     mux := http.NewServeMux()
+
+    // Initialize file server
+    fileServer := http.FileServer(http.Dir("./ui/static"))
     
-    // Register handlers
+    // Register file server handler
+    mux.Handle("/static/", http.StripPrefix("/static", fileServer))
+
+    // Register route handlers
     mux.HandleFunc("/", home)
     mux.HandleFunc("/snippet/view", snippetView)
     mux.HandleFunc("/snippet/create", snippetCreate)
