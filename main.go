@@ -32,15 +32,15 @@ func snippetCreate (w http.ResponseWriter, r *http.Request) {
     // it will send a 405 Method Not Allowed unless the method is POST
     // return from create snippet so subsequent code is not executed
     // test with `$ curl -i -X POST http://localhost:4000/snippet/create`
-    if r.Method != "POST" {
+    if r.Method != http.MethodPost {
         
         // add "Allow: POST" to the response header map
-        w.Header().Set("Allow", "POST")
+        w.Header().Set("Allow", http.MethodPost)
 
         // send status code and plain-text response body
         // use helper function http.Error()
         // to replace w.WriteHeader() and w.Write([]byte())
-        http.Error(w, "Method Not Allowed", 405)
+        http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
         return
     }
 
