@@ -18,6 +18,7 @@ func home(w http.ResponseWriter, r *http.Request) {
     // base template must come first
     files := []string{
         "./ui/html/base.tmpl",
+        "./ui/html/partials/nav.tmpl",
         "./ui/html/pages/home.tmpl",
     }
 
