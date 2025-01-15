@@ -33,6 +33,10 @@ func snippetCreate (w http.ResponseWriter, r *http.Request) {
     // return from create snippet so subsequent code is not executed
     // test with `$ curl -i -X POST http://localhost:4000/snippet/create`
     if r.Method != "POST" {
+        
+        // add "Allow: POST" to the response header map
+        w.Header().Set("Allow", "POST")
+
         w.WriteHeader(405)
         w.Write([]byte("Method Not Allowed"))
         return
