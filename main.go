@@ -8,6 +8,16 @@ import (
 // create handler functions
 // write byte slice as the response body
 func home(w http.ResponseWriter, r *http.Request) {
+    // this handler is used for the "/" url path
+    // "/" is a subtree path which acts as a wildcard
+    // we want the page to be displayed only for the fixed "/" path
+    // users should receive a 404 response otherwise using http.NotFound()
+    // restrict the root URL pattern with this simple check
+    if r.URL.Path != "/" {
+        http.NotFound(w, r)
+        return
+    }
+
     w.Write([]byte("Hello from Snippetbox"))
 }
 func snippetView (w http.ResponseWriter, r *http.Request) {
