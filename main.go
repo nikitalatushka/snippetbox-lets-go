@@ -1,6 +1,7 @@
 package main 
 
 import (
+    "fmt"       // for formatting and printing output
     "log"       // for simple logging
     "net/http"  // for http client and server implementations
     "strconv"   // for converting strings
@@ -30,7 +31,7 @@ func snippetView (w http.ResponseWriter, r *http.Request) {
         http.NotFound(w, r)
         return
     }
-    w.Write([]byte("Display a specific snippet"))
+    fmt.Fprintf(w, "Display a specific snippet with ID %d...", id)
 }
 func snippetCreate (w http.ResponseWriter, r *http.Request) {
     // this handler will eventually create a new snippet in the database
