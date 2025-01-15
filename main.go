@@ -3,6 +3,7 @@ package main
 import (
     "log"       // for simple logging
     "net/http"  // for http client and server implementations
+    "strconv"   // for converting strings
 )
 
 // create handler functions
@@ -17,10 +18,18 @@ func home(w http.ResponseWriter, r *http.Request) {
         http.NotFound(w, r)
         return
     }
-
     w.Write([]byte("Hello from Snippetbox"))
 }
 func snippetView (w http.ResponseWriter, r *http.Request) {
+    // strconv.Atoi() takes a string as input
+    // strconv.Atoi() returns 2 values: an integer and an error
+    // return NotFound if error != nil or id is less than 1
+    // use Golang short variable declaration operator `:=`
+    id, err := strconv.Atoi(r.URL.Query().Get("id"))
+    if err != nil || id < 1 {
+        http.NotFound(w, r)
+        return
+    }
     w.Write([]byte("Display a specific snippet"))
 }
 func snippetCreate (w http.ResponseWriter, r *http.Request) {
