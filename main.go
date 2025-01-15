@@ -30,6 +30,12 @@ func snippetCreate (w http.ResponseWriter, r *http.Request) {
 func main() {
     // create servmux router
     // 'mux' recieves HTTP requests and checks URL path 
+    // longer URL patterns always take precedence over shorter ones
+    // you can register patterns in any order
+    // request URLs are automatically sanitized
+    // automatic 301 Permanent Redirects for subtree paths and sanitized paths
+    // servmux doesn't support regexp-based patterns
+    // does not support URL variables for RESTFUL api
     mux := http.NewServeMux()
     // register handler functions 
     // 'mux' will dispatch to the handler function of a URL path
