@@ -1,11 +1,16 @@
 package main 
 
 import (
+    "flag"
     "log"
     "net/http"
 )
 
 func main() {
+    // Set command-line flags for runtime
+    addr := flag.String("addr", ":4000", "HTTP network address")
+    flag.Parse()
+
     // Initialize router
     mux := http.NewServeMux()
 
@@ -21,7 +26,7 @@ func main() {
     mux.HandleFunc("/snippet/create", snippetCreate)
     
     // Start web server
-    log.Println("starting server on :4000")
-    err := http.ListenAndServe(":4000", mux)
+    log.Printf("starting server on %s", *addr)
+    err := http.ListenAndServe(*addr, mux)
     log.Fatal(err)
 }
