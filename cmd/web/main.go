@@ -30,9 +30,17 @@ func main() {
     mux.HandleFunc("/", home)
     mux.HandleFunc("/snippet/view", snippetView)
     mux.HandleFunc("/snippet/create", snippetCreate)
-    
+
+    // Configure server
+    srv := &http.Server{
+        Addr:       *addr,
+        ErrorLog:   errorLog,
+        Handler:    mux,
+    }
+
+
     // Start web server
     infoLog.Printf("starting server on %s", *addr)
-    err := http.ListenAndServe(*addr, mux)
+    err := srv.ListenAndServe()
     errorLog.Fatal(err)
 }
