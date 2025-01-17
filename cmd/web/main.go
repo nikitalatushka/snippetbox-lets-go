@@ -12,7 +12,8 @@ func main() {
     addr := flag.String("addr", ":4000", "HTTP network address")
     flag.Parse()
 
-    // Create loggers
+    // Create decoupled loggers
+    // redirect streams with >> for Stdout and 2>> for Stderr
     infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
     errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 
