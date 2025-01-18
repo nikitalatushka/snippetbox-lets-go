@@ -3,14 +3,14 @@ package main
 import "net/http"
 
 // The routes() method returns a servemux containing our application routes
-func (app *application) routes() *http.Servemux {
-    
+func (app *application) routes() *http.ServeMux {
+
     // Initialize router
     mux := http.NewServeMux()
 
     // Initialize file server
     fileServer := http.FileServer(http.Dir("./ui/static"))
-    
+
     // Register file server handler
     mux.Handle("/static/", http.StripPrefix("/static", fileServer))
 
