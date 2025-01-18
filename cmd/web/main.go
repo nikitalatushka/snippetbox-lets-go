@@ -4,29 +4,40 @@ import (
     "flag"
     "log"
     "net/http"
+    "os"
 )
+
+// Define application-wide dependencies in a struct
+type application struct {
+    errorLog    *log.Logger
+    infoLog     *log.Logger
+}
 
 func main() {
     // Set command-line flags for runtime
     addr := flag.String("addr", ":4000", "HTTP network address")
     flag.Parse()
 
-    // Initialize router
-    mux := http.NewServeMux()
+    // Create decoupled loggers
+    // redirect streams with >> for Stdout and 2>> for Stderr
+    infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
+    errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 
-    // Initialize file server
-    fileServer := http.FileServer(http.Dir("./ui/static"))
-    
-    // Register file server handler
-    mux.Handle("/static/", http.StripPrefix("/static", fileServer))
+    // Initialize application struct
+    app := &application{
+        errorLog: errorLog,
+        infoLog: infoLog,
+    }
 
-    // Register route handlers
-    mux.HandleFunc("/", home)
-    mux.HandleFunc("/snippet/view", snippetView)
-    mux.HandleFunc("/snippet/create", snippetCreate)
-    
+    // Configure server
+    srv := &http.Server{
+        Addr:       *addr,
+        ErrorLog:   errorLog,
+        Handler:    app.routes(),
+    }
+
     // Start web server
-    log.Printf("starting server on %s", *addr)
-    err := http.ListenAndServe(*addr, mux)
-    log.Fatal(err)
+    infoLog.Printf("starting server on %s", *addr)
+    err := srv.ListenAndServe()
+    errorLog.Fatal(err)
 }
